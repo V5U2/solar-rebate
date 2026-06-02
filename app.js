@@ -216,7 +216,12 @@
       link: SOURCE_URLS.saaAccreditation,
       linkText: "Check SAA accreditation"
     });
-    messages.push({ type: "warn", text: "Confirm VPP capability for on-grid systems and local electrical compliance in " + state + "." });
+    messages.push({
+      type: "warn",
+      text: "Confirm VPP capability for on-grid systems and local electrical compliance in " + state + ".",
+      link: state === "WA" ? SOURCE_URLS.waEligibility : null,
+      linkText: state === "WA" ? "WA VPP and technical requirements" : null
+    });
     if (state === "WA" && stateRebate) {
       messages.push({
         type: "warn",
