@@ -45,7 +45,7 @@ The repository includes a GitHub Actions workflow at `.github/workflows/pages.ym
 - deploys to GitHub Pages on pushes to `main`
 - also supports manual runs through `workflow_dispatch`
 
-In GitHub, enable Pages with **Settings -> Pages -> Build and deployment -> GitHub Actions**.
+In GitHub, enable Pages with **Settings -> Pages -> Build and deployment -> GitHub Actions** before running the deployment workflow. The standard workflow `GITHUB_TOKEN` can deploy Pages, but it cannot enable Pages for a repository.
 
 ## Official Sources
 
