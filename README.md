@@ -38,6 +38,8 @@ The tests cover STC calculation, taper bands, eligibility checks, WA/NSW state e
 
 This app can be hosted on GitHub Pages because it is a static root-site app with no build step.
 
+Published site: https://v5u2.github.io/solar-rebate/
+
 The repository includes a GitHub Actions workflow at `.github/workflows/pages.yml` that:
 
 - runs `npm test`
