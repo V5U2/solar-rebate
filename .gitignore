@@ -1,0 +1,5 @@
+# Local agent and Playwright artifacts
+.omx/
+playwright-report/
+test-results/
+.playwright/

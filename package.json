@@ -1,0 +1,9 @@
+{
+  "name": "solar-rebate",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static Australian battery rebate calculator using official Cheaper Home Batteries Program sources.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Australian Battery Rebate Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="calculator" aria-labelledby="page-title">
+        <div class="intro">
+          <p class="eyebrow">Cheaper Home Batteries Program</p>
+          <h1 id="page-title">Battery rebate calculator</h1>
+          <p class="intro-copy">
+            Estimate battery STCs and available rebates for solar-connected small-scale battery systems under 100 kW.
+          </p>
+        </div>
+
+        <form class="input-panel" id="calculator-form">
+          <div class="field">
+            <label for="usableCapacity">
+              <span>Usable battery capacity</span>
+              <span class="info-tip" tabindex="0" aria-label="The battery energy you can actually use. This drives the STC estimate and is capped at the first 50 kWh.">i</span>
+            </label>
+            <div class="input-unit">
+              <input id="usableCapacity" name="usableCapacity" type="number" min="0" max="100" step="0.1" value="13.5" inputmode="decimal">
+              <span>kWh</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="state">
+              <span>State or territory</span>
+              <span class="info-tip" tabindex="0" aria-label="Used for local compliance messaging only. The national STC formula does not change by state in this calculator.">i</span>
+            </label>
+            <select id="state" name="state">
+              <option value="ACT">ACT</option>
+              <option value="NSW">NSW</option>
+              <option value="NT">NT</option>
+              <option value="QLD">QLD</option>
+              <option value="SA">SA</option>
+              <option value="TAS">TAS</option>
+              <option value="VIC">VIC</option>
+              <option value="WA" selected>WA</option>
+            </select>
+          </div>
+
+          <div class="field wa-provider-field" id="wa-provider-field">
+            <label for="waProvider">
+              <span>WA electricity provider</span>
+              <span class="info-tip" tabindex="0" aria-label="Used only for WA state rebate estimates. Synergy and Horizon Power have different rebate rates and caps.">i</span>
+            </label>
+            <select id="waProvider" name="waProvider">
+              <option value="synergy" selected>Synergy</option>
+              <option value="horizon">Horizon Power</option>
+            </select>
+          </div>
+
+          <div class="field state-program-field" id="nsw-vpp-field" hidden>
+            <label class="toggle">
+              <input id="includeNswVpp" name="includeNswVpp" type="checkbox">
+              <span>Include NSW VPP incentive</span>
+              <span class="info-tip" tabindex="0" aria-label="Optional estimate for connecting an eligible NSW battery to a Virtual Power Plant. Actual offers vary by VPP provider and contract.">i</span>
+            </label>
+          </div>
+
+          <div class="field">
+            <label for="installDate">
+              <span>Installation / certification date</span>
+              <span class="info-tip" tabindex="0" aria-label="Used to select the official STC factor period. Dates before 1 July 2025 are not eligible.">i</span>
+            </label>
+            <input id="installDate" name="installDate" type="date" value="2026-06-02">
+          </div>
+
+          <details class="advanced">
+            <summary>Advanced battery details</summary>
+            <label class="toggle">
+              <input id="autoNominal" name="autoNominal" type="checkbox" checked>
+              <span>Estimate nominal capacity from usable capacity</span>
+              <span class="info-tip" tabindex="0" aria-label="When enabled, nominal capacity is estimated as usable capacity divided by 90 percent. Turn this off if you know the datasheet value.">i</span>
+            </label>
+            <div class="field">
+              <label for="solarSize">
+                <span>Solar PV system size</span>
+                <span class="info-tip" tabindex="0" aria-label="The connected solar system size. Battery systems installed without solar PV are not eligible in this calculator.">i</span>
+              </label>
+              <div class="input-unit">
+                <input id="solarSize" name="solarSize" type="number" min="0" max="100" step="0.1" value="6.6" inputmode="decimal">
+                <span>kW</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="nominalCapacity">
+                <span>Nominal battery capacity</span>
+                <span class="info-tip" tabindex="0" aria-label="The manufacturer-rated battery capacity. It matters for eligibility: batteries must be 5 to 100 kWh nominal capacity.">i</span>
+              </label>
+              <div class="input-unit">
+                <input id="nominalCapacity" name="nominalCapacity" type="number" min="0" max="100" step="0.1" value="15.0" inputmode="decimal">
+                <span>kWh</span>
+              </div>
+            </div>
+            <p class="field-note">
+              This uses a simple 90% usable-to-nominal estimate. Use the datasheet value if you know it.
+            </p>
+            <div class="field">
+              <label for="stcPrice">
+                <span>STC value</span>
+                <span class="info-tip" tabindex="0" aria-label="Defaults to the official STC Clearing House price of $40 per certificate. Open-market or retailer values may differ.">i</span>
+              </label>
+              <div class="input-unit">
+                <span>$</span>
+                <input id="stcPrice" name="stcPrice" type="number" min="0" step="0.01" value="40" inputmode="decimal">
+              </div>
+            </div>
+            <p class="field-note">
+              Defaults to the official STC Clearing House price of $40 per certificate. Retailer or market values may differ.
+            </p>
+          </details>
+        </form>
+
+        <aside class="results-panel" aria-live="polite">
+          <div class="status-row">
+            <span class="status-dot" id="status-dot"></span>
+            <span id="eligibility-status">Checking inputs</span>
+          </div>
+
+          <dl class="result-grid">
+            <div>
+              <dt>
+                <span>Estimated STCs</span>
+                <span class="info-tip result-info" tabindex="0" aria-label="Whole small-scale technology certificates estimated from usable capacity, taper bands and the selected date factor.">i</span>
+              </dt>
+              <dd id="stc-result">0</dd>
+            </div>
+            <div>
+              <dt>
+                <span>Federal estimate</span>
+                <span class="info-tip result-info" tabindex="0" aria-label="Estimated STCs multiplied by the STC value. This is an estimate of the federal Cheaper Home Batteries Program discount, not a retailer quote.">i</span>
+              </dt>
+              <dd id="discount-result">$0</dd>
+            </div>
+            <div>
+              <dt>
+                <span>State estimate</span>
+                <span class="info-tip result-info" tabindex="0" aria-label="Estimated state or territory battery rebate. WA uses the official Synergy or Horizon Power rate when WA is selected.">i</span>
+              </dt>
+              <dd id="state-rebate-result">$0</dd>
+            </div>
+            <div>
+              <dt>
+                <span>Total estimate</span>
+                <span class="info-tip result-info" tabindex="0" aria-label="Federal estimate plus any state or territory estimate this calculator can calculate. Eligibility must still be confirmed by your installer or retailer.">i</span>
+              </dt>
+              <dd id="total-discount-result">$0</dd>
+            </div>
+            <div>
+              <dt>
+                <span>STC factor</span>
+                <span class="info-tip result-info" tabindex="0" aria-label="The official date-based multiplier from the DCCEEW factor table used for battery STC calculations.">i</span>
+              </dt>
+              <dd id="factor-result">-</dd>
+            </div>
+            <div>
+              <dt>
+                <span>Capacity counted</span>
+                <span class="info-tip result-info" tabindex="0" aria-label="Usable battery capacity included in the calculation. STCs are only provided for the first 50 kWh.">i</span>
+              </dt>
+              <dd id="capacity-result">0 kWh</dd>
+            </div>
+          </dl>
+
+          <details class="working-details">
+            <summary>Show working</summary>
+            <div class="breakdown" id="breakdown"></div>
+          </details>
+        </aside>
+      </section>
+
+      <section class="details" aria-labelledby="details-title">
+        <div>
+          <h2 id="details-title">What this estimate checks</h2>
+          <p>
+            The national battery discount is STC-based. Your installer or retailer still needs to confirm product, installer,
+            inverter, VPP and local electrical safety requirements.
+          </p>
+        </div>
+
+        <div class="checks">
+          <h3>Eligibility notes</h3>
+          <ul id="messages"></ul>
+        </div>
+
+        <div class="sources">
+          <h3>Official sources</h3>
+          <ul>
+            <li><a href="https://www.dcceew.gov.au/energy/programs/cheaper-home-batteries" rel="noreferrer">DCCEEW Cheaper Home Batteries Program</a></li>
+            <li><a href="https://www.dcceew.gov.au/energy/programs/cheaper-home-batteries/small-scale-technology-certificates" rel="noreferrer">DCCEEW STCs for batteries</a></li>
+            <li><a href="https://www.dcceew.gov.au/energy/programs/cheaper-home-batteries/eligibility-information" rel="noreferrer">DCCEEW eligibility information</a></li>
+            <li><a href="https://www.rec-registry.gov.au/rec-registry/app/calculators/sgu-stc-calculator" rel="noreferrer">REC Registry SGU STC calculator</a></li>
+            <li><a href="https://www.wa.gov.au/organisation/energy-policy-wa/wa-residential-battery-scheme-eligibility-requirements" rel="noreferrer">WA Residential Battery Scheme eligibility requirements</a></li>
+            <li><a href="https://www.energy.nsw.gov.au/households/grants-rebates/household-energy-saving-upgrades/virtual-power-plant-vpp-incentive" rel="noreferrer">NSW Virtual Power Plant incentive</a></li>
+            <li><a href="https://nt.gov.au/industry/business-grants-funding/home-and-business-battery-scheme" rel="noreferrer">NT Home and Business Battery Scheme status</a></li>
+            <li><a href="https://www.qld.gov.au/housing/home-modifications-energy-savings/battery-booster-program" rel="noreferrer">Queensland Battery Booster status</a></li>
+            <li><a href="https://www.energymining.sa.gov.au/consumers/hbs-closed" rel="noreferrer">South Australia Home Battery Scheme status</a></li>
+            <li><a href="https://www.climatechoices.act.gov.au/energy/home-batteries" rel="noreferrer">ACT home battery support</a></li>
+            <li><a href="https://www.solar.vic.gov.au/" rel="noreferrer">Solar Victoria programs</a></li>
+          </ul>
+        </div>
+      </section>
+
+      <p class="disclaimer">
+        Estimate only. The REC Registry calculator and the Renewable Energy (Electricity) Act and Regulations determine the
+        official STC entitlement for a specific installation.
+      </p>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
