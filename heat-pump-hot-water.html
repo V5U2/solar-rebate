@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Australian Heat Pump Hot Water Rebate Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <nav class="page-nav" aria-label="Calculators">
+        <a href="index.html">Battery rebates</a>
+        <a href="heat-pump-hot-water.html" aria-current="page">Heat pump hot water</a>
+      </nav>
+
+      <section class="calculator" aria-labelledby="page-title">
+        <div class="intro">
+          <p class="eyebrow">SRES and state programs</p>
+          <h1 id="page-title">Heat pump hot water rebate calculator</h1>
+          <p class="intro-copy">
+            Estimate the federal STC discount and official state support for an eligible air-source heat pump hot water system.
+          </p>
+        </div>
+
+        <form class="input-panel" id="heat-pump-form">
+          <div class="field">
+            <label for="state">
+              <span>State or territory</span>
+              <span class="info-tip" tabindex="0" aria-label="Used to select official state or territory programs. The federal STC estimate is national but depends on model, postcode and install date.">i</span>
+            </label>
+            <select id="state" name="state">
+              <option value="ACT">ACT</option>
+              <option value="NSW">NSW</option>
+              <option value="NT">NT</option>
+              <option value="QLD">QLD</option>
+              <option value="SA">SA</option>
+              <option value="TAS">TAS</option>
+              <option value="VIC" selected>VIC</option>
+              <option value="WA">WA</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="existingSystem">
+              <span>Existing hot water system</span>
+              <span class="info-tip" tabindex="0" aria-label="NSW publishes different indicative heat pump discounts for replacing electric and gas water heaters. Other programs may also require a replacement.">i</span>
+            </label>
+            <select id="existingSystem" name="existingSystem">
+              <option value="electric" selected>Electric resistance</option>
+              <option value="gas">Gas</option>
+              <option value="heat-pump">Existing heat pump</option>
+              <option value="solar">Solar hot water</option>
+              <option value="new-build">New build / no replacement</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="installedCost">
+              <span>Installed quote before rebates</span>
+              <span class="info-tip" tabindex="0" aria-label="Used only where official state programs calculate a percentage of the purchase and installation cost. Use your quoted supply and installation amount before this state rebate.">i</span>
+            </label>
+            <div class="input-unit">
+              <span>$</span>
+              <input id="installedCost" name="installedCost" type="number" min="0" step="1" value="3500" inputmode="decimal">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="tankCapacity">
+              <span>Tank capacity</span>
+              <span class="info-tip" tabindex="0" aria-label="Clean Energy Regulator guidance says air-source heat pumps must be less than 425 L to be eligible for STCs.">i</span>
+            </label>
+            <div class="input-unit">
+              <input id="tankCapacity" name="tankCapacity" type="number" min="0" max="1000" step="1" value="270" inputmode="numeric">
+              <span>L</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="stcCount">
+              <span>Heat pump STCs</span>
+              <span class="info-tip" tabindex="0" aria-label="Use the REC Registry solar water heater calculator or CER register for your exact model, postcode and install date. This calculator does not guess model-specific STCs.">i</span>
+            </label>
+            <input id="stcCount" name="stcCount" type="number" min="0" step="1" value="22" inputmode="numeric">
+          </div>
+
+          <div class="field">
+            <label for="stcValue">
+              <span>STC value</span>
+              <span class="info-tip" tabindex="0" aria-label="Defaults to the official STC Clearing House price of $40 per certificate. Installer or market values may differ.">i</span>
+            </label>
+            <div class="input-unit">
+              <span>$</span>
+              <input id="stcValue" name="stcValue" type="number" min="0" step="0.01" value="40" inputmode="decimal">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="installDate">
+              <span>Installation date</span>
+              <span class="info-tip" tabindex="0" aria-label="STCs can only be created within 12 months of installing an eligible solar water heater or air-source heat pump system.">i</span>
+            </label>
+            <input id="installDate" name="installDate" type="date" value="2026-06-04">
+          </div>
+
+          <div class="field">
+            <label class="toggle">
+              <input id="modelOnRegister" name="modelOnRegister" type="checkbox" checked>
+              <span>Model is on the CER register</span>
+              <span class="info-tip" tabindex="0" aria-label="Only models on the Clean Energy Regulator register of solar water heaters and air-source heat pumps are eligible for STCs.">i</span>
+            </label>
+          </div>
+
+          <div class="field state-program-field" id="vic-local-field">
+            <label class="toggle">
+              <input id="vicLocalMade" name="vicLocalMade" type="checkbox">
+              <span>VIC locally made eligible product</span>
+              <span class="info-tip" tabindex="0" aria-label="Solar Victoria publishes a higher hot water rebate cap for eligible locally made products.">i</span>
+            </label>
+          </div>
+
+          <div class="field state-program-field" id="act-eligible-field" hidden>
+            <label class="toggle">
+              <input id="actEligible" name="actEligible" type="checkbox">
+              <span>ACT Home Energy Support eligible</span>
+              <span class="info-tip" tabindex="0" aria-label="ACT Home Energy Support rebates require concession-card, owner-occupier, workshop and unimproved-value eligibility.">i</span>
+            </label>
+          </div>
+        </form>
+
+        <aside class="results-panel" aria-live="polite">
+          <div class="status-row">
+            <span class="status-dot" id="status-dot"></span>
+            <span id="eligibility-status">Checking inputs</span>
+          </div>
+
+          <dl class="result-grid">
+            <div>
+              <dt>
+                <span>Federal STC estimate</span>
+                <span class="info-tip result-info" tabindex="0" aria-label="Entered STCs multiplied by the STC value. Confirm the STC count with the REC Registry calculator or CER register.">i</span>
+              </dt>
+              <dd id="federal-result">$0</dd>
+            </div>
+            <div>
+              <dt>
+                <span>State estimate</span>
+                <span class="info-tip result-info" tabindex="0" aria-label="Calculated only where an official state or territory program publishes a usable amount or cap.">i</span>
+              </dt>
+              <dd id="state-result">$0</dd>
+            </div>
+            <div>
+              <dt>
+                <span>Total support estimate</span>
+                <span class="info-tip result-info" tabindex="0" aria-label="Federal STC estimate plus any state estimate this calculator can calculate. Your quote may differ.">i</span>
+              </dt>
+              <dd id="total-result">$0</dd>
+            </div>
+            <div>
+              <dt>
+                <span>Estimated out of pocket</span>
+                <span class="info-tip result-info" tabindex="0" aria-label="Installed quote before rebates minus the federal and state estimates.">i</span>
+              </dt>
+              <dd id="out-of-pocket-result">$0</dd>
+            </div>
+          </dl>
+
+          <details class="working-details">
+            <summary>Show working</summary>
+            <div class="breakdown" id="breakdown"></div>
+          </details>
+        </aside>
+      </section>
+
+      <section class="details" aria-labelledby="details-title">
+        <div>
+          <h2 id="details-title">What this estimate checks</h2>
+          <p>
+            Heat pump hot water support is mostly delivered through model-specific STCs and quote-based state programs.
+            This page calculates only the parts official sources publish clearly enough to estimate.
+          </p>
+        </div>
+
+        <div class="checks">
+          <h3>Eligibility notes</h3>
+          <ul id="messages"></ul>
+        </div>
+      </section>
+
+      <section class="faq" aria-labelledby="faq-title">
+        <h2 id="faq-title">FAQ</h2>
+        <details>
+          <summary>Why do I enter STCs manually?</summary>
+          <p>
+            Heat pump hot water STCs depend on the exact model, postcode, installation date and CER register values.
+            Use the REC Registry solar water heater calculator or CER register for the certificate count.
+          </p>
+        </details>
+        <details>
+          <summary>Does every state have a heat pump hot water rebate?</summary>
+          <p>
+            No. Some jurisdictions publish direct rebates, some use quote-based certificate schemes, some offer loans,
+            and some do not publish a current household rebate.
+          </p>
+        </details>
+        <details>
+          <summary>Can state discounts stack with STCs?</summary>
+          <p>
+            Often yes, but the order matters. For example, Solar Victoria says its rebate is calculated after other
+            discounts such as STCs and Victorian Energy Efficiency Certificates.
+          </p>
+        </details>
+      </section>
+
+      <p class="disclaimer">
+        Estimate only. The REC Registry calculator, CER register, product eligibility lists and state program rules determine
+        final eligibility and quoted discounts for a specific installation.
+      </p>
+
+      <section class="sources" aria-labelledby="sources-title">
+        <h2 id="sources-title">Official sources</h2>
+        <ul>
+          <li><a href="https://cer.gov.au/schemes/renewable-energy-target/small-scale-renewable-energy-scheme/small-scale-renewable-energy-systems/solar-water-heaters-and-air-source-heat-pumps" rel="noreferrer">CER solar water heaters and air-source heat pumps</a></li>
+          <li><a href="https://cer.gov.au/schemes/renewable-energy-target/small-scale-renewable-energy-scheme/small-scale-renewable-energy-systems/solar-water-heaters/register-solar-water-heaters" rel="noreferrer">CER register of solar water heaters and air-source heat pumps</a></li>
+          <li><a href="https://www.rec-registry.gov.au/rec-registry/app/calculators/swh-stc-calculator" rel="noreferrer">REC Registry solar water heater STC calculator</a></li>
+          <li><a href="https://www.energy.nsw.gov.au/households/grants-rebates/household-energy-saving-upgrades/hot-water-upgrade-incentive" rel="noreferrer">NSW hot water upgrade incentive</a></li>
+          <li><a href="https://www.solar.vic.gov.au/hot-water-rebate/" rel="noreferrer">Solar Victoria hot water rebate</a></li>
+          <li><a href="https://www.climatechoices.act.gov.au/policy-programs/home-energy-support-rebates-for-homeowners" rel="noreferrer">ACT Home Energy Support rebates</a></li>
+          <li><a href="https://www.recfit.tas.gov.au/grants_programs/energy-efficiency/energy_saver_loan_scheme" rel="noreferrer">Tasmania Energy Saver Loan Scheme status</a></li>
+          <li><a href="https://www.qld.gov.au/law/your-rights/legal-and-property-rights/laws-for-building-houses-and-pools/plumbing-laws" rel="noreferrer">Queensland plumbing laws for hot water heaters</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <script src="heat-pump-hot-water.js"></script>
+  </body>
+</html>

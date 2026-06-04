@@ -8,6 +8,7 @@ The app estimates:
 - federal dollar discount using an editable STC value, defaulting to `$40`
 - WA Residential Battery Scheme rebate where applicable
 - optional NSW Virtual Power Plant incentive estimate
+- heat pump hot water STC and state support estimates on a separate page
 - total estimated support
 
 It is an estimate only. Installers, retailers, the REC Registry calculator, and the relevant state program rules determine final eligibility and quoted discounts.
@@ -26,13 +27,19 @@ Open:
 http://127.0.0.1:8080/
 ```
 
+Heat pump hot water page:
+
+```text
+http://127.0.0.1:8080/heat-pump-hot-water.html
+```
+
 ## Test
 
 ```sh
 npm test
 ```
 
-The tests cover STC calculation, taper bands, eligibility checks, WA/NSW state estimates, and browser-storage persistence helpers.
+The tests cover battery STC calculation, taper bands, eligibility checks, battery state estimates, heat pump hot water state estimates, and browser-storage persistence helpers.
 
 ## GitHub Pages
 
@@ -62,6 +69,13 @@ This project should use official sources only for rebate logic:
 - WA Residential Battery Scheme eligibility: https://www.wa.gov.au/organisation/energy-policy-wa/wa-residential-battery-scheme-eligibility-requirements
 - WA Residential Battery Scheme approved vendor directory: https://www.plenti.com.au/wa-residential-battery-scheme-vendor-directory/
 - NSW VPP incentive: https://www.energy.nsw.gov.au/households/grants-rebates/household-energy-saving-upgrades/virtual-power-plant-vpp-incentive
+- CER solar water heaters and air-source heat pumps: https://cer.gov.au/schemes/renewable-energy-target/small-scale-renewable-energy-scheme/small-scale-renewable-energy-systems/solar-water-heaters-and-air-source-heat-pumps
+- CER register of solar water heaters and air-source heat pumps: https://cer.gov.au/schemes/renewable-energy-target/small-scale-renewable-energy-scheme/small-scale-renewable-energy-systems/solar-water-heaters/register-solar-water-heaters
+- REC Registry solar water heater STC calculator: https://www.rec-registry.gov.au/rec-registry/app/calculators/swh-stc-calculator
+- NSW hot water upgrade incentive: https://www.energy.nsw.gov.au/households/grants-rebates/household-energy-saving-upgrades/hot-water-upgrade-incentive
+- Solar Victoria hot water rebate: https://www.solar.vic.gov.au/hot-water-rebate/
+- ACT Home Energy Support rebates: https://www.climatechoices.act.gov.au/policy-programs/home-energy-support-rebates-for-homeowners
+- Tasmania Energy Saver Loan Scheme status: https://www.recfit.tas.gov.au/grants_programs/energy-efficiency/energy_saver_loan_scheme
 
 ## License
 

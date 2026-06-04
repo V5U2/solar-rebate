@@ -36,6 +36,30 @@ a {
   color: var(--accent-strong);
 }
 
+.page-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.page-nav a {
+  padding: 8px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.52);
+  color: var(--accent-strong);
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.page-nav a[aria-current="page"] {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  color: #f8f7f0;
+}
+
 .app-shell {
   width: min(880px, calc(100% - 32px));
   margin: 0 auto;
